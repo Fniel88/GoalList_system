@@ -1,0 +1,50 @@
+<!--This template or project use jinja thus I gotta use static-->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goals CRUD</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 offset-md-4">
+                <h1 class="display-6 fw-bold">Goals list</h1>
+                <form action="{% url 'create_goal' %}" method="POST" class="card card-body bg-secondary">
+                    {% csrf_token %} <!--It works as a certificated system that help us to
+                    verify who sended the info-->
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" placeholder="Write a title" class="form-control mb-2">
+                    <label for="description">Description:</label>
+                    <textarea name="description" rows="3" placeholder="Write a description" class="form-control mb-2"></textarea>
+                    <button class="btn btn-succes">Save</button>
+                </form>
+                <!-- I just gonna use one template, here you're gonna find
+                all frontend-->
+                <!--Working in every object that we sended to here-->
+                {% for goal in goals %}
+                    <div class="card card-body text-black mt-2 d-flex flex-row justify-content-between">
+                        <div>
+                            <h3>{{goal.title}}</h3>
+                            <p>{{goal.description}}</p>
+                        </div>
+                        <form action="{% url 'delete_goal' goal.id %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                <!--If the for find nothing, thanks to jinja will there be 
+                a else that would say something in the conditions its false -->
+                {% empty %}
+                    <h1 class="display-4 text-center">There is no goals yet</h1>    
+                {% endfor %}
+            </div> 
+        </div>
+    </div>
+</body>
+</html>
